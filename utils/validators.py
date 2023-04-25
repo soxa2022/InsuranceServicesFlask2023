@@ -107,9 +107,4 @@ def is_valid(value):
     elif length == 10:
         return check_egn(value)
     else:
-        raise ValueError(
-            f"{value} with size {length} is not valid EGN or Bulstat!"
-        )
-
-
-
+        raise ValueError(f"{value} with size {length} is not valid EGN or Bulstat!")

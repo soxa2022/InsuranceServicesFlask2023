@@ -11,7 +11,9 @@ class CustomerRegisterRequestSchema(CustomerRequestBaseSchema):
     last_name = fields.String(required=True)
     phone = fields.String(required=True)
     customer_type = fields.Enum(CustomerType, required=True)
-    egn_or_bulstat = fields.String(required=True, validate=validate.And(validate.Length(min=9, max=13), is_valid))
+    egn_or_bulstat = fields.String(
+        required=True, validate=validate.And(validate.Length(min=9, max=13), is_valid)
+    )
     address = fields.String(required=True)
     driving_experience = fields.String(required=True)
 
