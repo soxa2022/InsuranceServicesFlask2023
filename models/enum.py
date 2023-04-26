@@ -10,6 +10,7 @@ class RoleType(enum.Enum):
 class State(enum.Enum):
     pending = "Pending"
     payed = "Payed"
+    accepted = "Accepted"
     canceled = "Canceled"
 
 
@@ -30,3 +31,9 @@ class VehicleType(enum.Enum):
 class SteeringWheelPosition(enum.Enum):
     left = "left"
     right = "right"
+
+
+class EstateType(enum.Enum):
+    apartment = "apartment"
+    house = "house"
+    house_floor = "house_floor"

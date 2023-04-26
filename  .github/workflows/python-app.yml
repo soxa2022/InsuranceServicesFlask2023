@@ -1,0 +1,64 @@
+name: Flask Insurence Services
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: psf/black@stable
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pypa/gh-action-pip-audit@v1.0.6
+        with:
+         inputs: requirements.txt
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15.2
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: soxa
+          POSTGRES_DB: InsurenceServicesDB
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.9"
+    - name: Install dependencies and test
+      env:
+        DB_USER: "postgres"
+        DB_PASSWORD: 'soxa'
+        DB_PORT: '5432'
+        DB_NAME: 'InsurenceServicesDB'
+        SECRET_KEY: ""
+        AWS_ACCESS_KEY: ""
+        AWS_SECRET: ""
+        AWS_BUCKET: ""
+        AWS_REGION: ""
+        WISE_TOKEN: ""
+        WISE_URL: ""
+        POSTGRES_PASSWORD: soxa
+        POSTGRES_USER: postgres
+        POSTGRES_DB: InsurencesServicesTestDB
+      run:
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt        
+        pytest
+
+
+

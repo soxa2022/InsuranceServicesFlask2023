@@ -14,4 +14,3 @@ class PaymentCardRequestSchema(Schema):
     amount = fields.Float(required=True)
     currency = fields.String(required=True)
     policy_number = fields.String(required=True)
-
