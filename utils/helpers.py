@@ -11,4 +11,13 @@ def decode_photo(path, encoded_string):
             raise BadRequest("Invalid photo encoding")
 
 
+def encode_image(file):
+    with open(file, "rb") as i:
+        try:
+            encoded_string = base64.b64encode(i.read()).decode("utf-8")
+        except Exception as ex:
+            raise BadRequest("Invalid photo encoding")
+    return encoded_string
+
+
 encoded_photo = ""
