@@ -1,6 +1,6 @@
 from flask import request
 from flask_restful import Resource
-
+from sqlalchemy.sql import text
 from db import db
 from managers.authorization import auth
 from models import RoleType
@@ -14,7 +14,7 @@ class SearchResource(Resource):
     def get(self):
         plate_number = request.args.get("plate_number")
         email = request.args.get("email")
-        result = db.session.execute("SELECT * FROM get_func()")
+        result = db.session.execute(text("SELECT * FROM get_func()"))
         # result = db.session.execute("SELECT * FROM get_func() WHERE email = :email", {"email": email})
         if email:
             result = (

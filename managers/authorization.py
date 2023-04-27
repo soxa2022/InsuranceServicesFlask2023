@@ -19,9 +19,6 @@ class AuthManager:
             customer_data["password"] = generate_password_hash(
                 customer_data["password"]
             )
-            customer_data[
-                "full_name"
-            ] = f"{customer_data.pop('first_name')} {customer_data.pop('middle_name')} {customer_data.pop('last_name')}"
             customer = Customer(**customer_data)
             db.session.add(customer)
             db.session.commit()

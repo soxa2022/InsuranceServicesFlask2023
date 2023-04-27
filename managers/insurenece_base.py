@@ -1,5 +1,6 @@
 import os
 
+from decouple import config
 from werkzeug.exceptions import BadRequest
 
 from constants import TEMP_FILE_FOLDER
@@ -14,6 +15,7 @@ from services.send_email import send_complex_message
 
 s3_service = S3Service()
 ses = SES()
+TEXT = "Your input information is available"
 
 
 class InsurenceManager:
@@ -40,13 +42,10 @@ class InsurenceManager:
     @staticmethod
     def accept_insurence(insurence_id):
         InsurenceManager.validate_status(insurence_id)
-        vehicle = Vehicle.query.filter_by(
-            id=insurence_id
-        ).first()
-        customer = Customer.query.filter_by(
-            id=vehicle["customer_id"]).first()
-        policy_number = f"BG/{str(random_numbers)}"
-        vehicle["policy_number"] = policy_number
+        vehicle = Vehicle.query.filter_by(id=insurence_id).first()
+        customer = Customer.query.filter_by(id=vehicle.customer_id).first()
+        policy_number = f"BG{str(random_numbers())}"
+        vehicle.policy_number = policy_number
         file_name = f"{policy_number}.pdf"
         create_pdf_from_txt(policy_number)
         path_file = os.path.join(TEMP_FILE_FOLDER, file_name)
@@ -58,22 +57,17 @@ class InsurenceManager:
             raise Exception("Upload pdf failed")
         finally:
             os.remove(path_file)
-        ses.send_mail(file_name, customer['email'])
+        ses.send_mail(file_name, customer.email)
         Vehicle.query.filter_by(id=insurence_id).update({"status": State.accepted})
         db.session.commit()
 
     @staticmethod
     def cancel_insurence(insurence_id):
         InsurenceManager.validate_status(insurence_id)
-        vehicle = Vehicle.query.filter_by(
-            id=insurence_id
-        ).first()
-        customer = Customer.query.filter_by(
-            id=vehicle["customer_id"]).first()
-        send_complex_message(customer["email"])
-        Vehicle.query.filter_by(
-            id=insurence_id
-        ).update({"status": State.canceled})
+        vehicle = Vehicle.query.filter_by(id=insurence_id).first()
+        customer = Customer.query.filter_by(id=vehicle.customer_id).first()
+        send_complex_message(customer.email, TEXT)
+        Vehicle.query.filter_by(id=insurence_id).update({"status": State.canceled})
         db.session.commit()
 
     @staticmethod
@@ -86,6 +80,7 @@ class InsurenceManager:
 
     @staticmethod
     def delete_insurence(pk):
+        InsurenceManager.validate_status(pk)
         Vehicle.query.filter_by(id=pk).update({"is_deleted": True})
 
 

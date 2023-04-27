@@ -7,7 +7,7 @@ from models.enum import RoleType, CustomerType
 class Customer(db.Model):
     __tablename__ = "customers"
     id = db.Column(db.Integer, primary_key=True)
-    full_name = db.Column(db.String(60), nullable=False)
+    name = db.Column(db.String(60), nullable=False)
     egn_or_bulstat = db.Column(db.String(13), unique=True, nullable=False)
     email = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)

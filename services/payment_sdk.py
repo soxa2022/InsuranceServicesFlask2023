@@ -7,7 +7,7 @@ from square.client import Client
 class SquareUpService:
     def __init__(self):
         self.client = Client(
-            access_token=config("SQUARE_TOKEN_BANK"), environment="sandbox"
+            access_token=config("SQUARE_TOKEN_CARD"), environment="sandbox"
         )
         self.payment_id_ = None
 
@@ -16,7 +16,7 @@ class SquareUpService:
             body={
                 "source_id": "cnon:card-nonce-ok",
                 "idempotency_key": idempotency_key,
-                "amount_money": {"amount": amount, "currency": "USD"},
+                "amount_money": {"amount": int(amount), "currency": "EUR"},
                 "autocomplete": False,
                 "location_id": "",
                 "reference_id": policy_id,

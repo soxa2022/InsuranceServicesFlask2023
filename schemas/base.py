@@ -10,9 +10,9 @@ class CustomerRequestBaseSchema(Schema):
         required=True,
         validate=validate.And(validate.Length(min=5, max=255), check_email),
     )
-    password = fields.String(
+    password = fields.Str(
         required=True,
-        validate=validate.And(validate.Range(min=10, max=25), validate_password),
+        validate=validate.And(validate.Length(min=10, max=25), validate_password),
     )
 
 
@@ -21,15 +21,13 @@ class CustomerResponseBaseSchema(Schema):
 
 
 class VehicleBaseSchema(Schema):
-    type_vehicle = fields.Enum(VehicleType, required=True)
-    plate_number = fields.Str(required=True, validate=validate.Range(min=7, max=8))
+    plate_number = fields.Str(required=True, validate=validate.Length(min=7, max=8))
     talon_number = fields.Str(required=True, validate=validate.Length(10))
     power = fields.Str(required=True)
     engine = fields.Str(required=True)
     colour = fields.Str(required=True)
     seats = fields.Str(required=True)
     registration_address = fields.Str(required=True)
-    steering_wheel_position = fields.Enum(SteeringWheelPosition, required=True)
     usage = fields.Str(required=True)
 
 

@@ -8,10 +8,10 @@ class RoleType(enum.Enum):
 
 
 class State(enum.Enum):
-    pending = "Pending"
-    payed = "Payed"
-    accepted = "Accepted"
-    canceled = "Canceled"
+    pending = "pending"
+    payed = "payed"
+    accepted = "accepted"
+    canceled = "canceled"
 
 
 class CustomerType(enum.Enum):

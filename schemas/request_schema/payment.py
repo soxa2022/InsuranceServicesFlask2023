@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, validate
 
 
 class PaymentCardRequestSchema(Schema):
@@ -6,11 +6,11 @@ class PaymentCardRequestSchema(Schema):
     middle_name = fields.String(required=True)
     last_name = fields.String(required=True)
     card_brand = fields.String(required=True)
-    card_number = fields.Integer(required=True)
-    exp_month = fields.Integer(required=True)
-    exp_year = fields.Integer(required=True)
-    cvv_status = fields.Integer(required=True)
-    avs_status = fields.Integer(required=True)
-    amount = fields.Float(required=True)
+    card_number = fields.String(required=True)
+    exp_month = fields.String(required=True)
+    exp_year = fields.String(required=True)
+    cvv = fields.String(required=True)
+    avs = fields.String(required=True)
+    amount = fields.Float(required=True, validate=validate.Range(min=1))
     currency = fields.String(required=True)
     policy_number = fields.String(required=True)

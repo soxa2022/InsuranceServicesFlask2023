@@ -51,7 +51,7 @@ class SES:
         msg["Subject"] = "Your insurence policy from InsurenceServices"
 
         attachment = MIMEApplication(
-            "Test email with attachment", Name=os.path.basename(self.path_file)
+            "Insurence policy", Name=os.path.basename(self.path_file)
         )
         attachment[
             "Content-Disposition"

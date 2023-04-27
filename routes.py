@@ -2,8 +2,9 @@ from resources.authorization import RegisterResource, LoginResource
 from resources.insurences import (
     VehicleInsurenceResource,
     EstateInsurenceResource,
-    InsurenceAcceptResource, InsurenceCancelResource, InsurenceDeleteResource
-
+    InsurenceAcceptResource,
+    InsurenceCancelResource,
+    InsurenceDeleteResource,
 )
 from resources.payment import PaymentCardResource
 from resources.search import SearchResource

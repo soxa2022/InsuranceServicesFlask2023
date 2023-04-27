@@ -6,6 +6,7 @@ from flask_restful import Api
 
 from db import db
 from routes import routes
+from services.send_reminder import schedule
 
 
 class ProductionConfig:
@@ -43,6 +44,7 @@ def create_app(config="config.DevelopmentConfig"):
     app.config.from_object(config)
     api = Api(app)
     migrate = Migrate(app, db)
-    CORS(app)
+    # schedule(app)
+    # CORS(app)
     [api.add_resource(*route) for route in routes]
     return app
