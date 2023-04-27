@@ -20,10 +20,12 @@ class PaymentManager:
         payment_id = payment.create_payment(amount, policy_id, idempotency_key)
         status = payment.complete_payment(payment_id)
         insurence = Vehicle.query.filter_by(
-            customer_id=current_customer.id, policy_number=policy_id)
+            customer_id=current_customer.id, policy_number=policy_id
+        )
         if not insurence:
             insurence = Estate.query.filter_by(
-                customer_id=current_customer.id, policy_number=policy_id)
+                customer_id=current_customer.id, policy_number=policy_id
+            )
         else:
             raise Exception("Insurence not found")
 
