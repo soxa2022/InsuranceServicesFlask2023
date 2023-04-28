@@ -3,6 +3,7 @@ import os
 import time
 
 from flask_apscheduler import APScheduler
+from sqlalchemy.sql import text
 
 from constants import TEMP_FILE_FOLDER
 from db import db
@@ -29,17 +30,25 @@ def schedule(app):
 
 def my_task():
     with scheduler.app.app_context():
-        # print('Job 1 executed')
         Config()
-        try:
-            result = db.session.execute("SELECT * FROM reminder_view").all()
-            if result:
-                for row in result:
-                    email = [row[0]]
-                    policy_number = row[1]
-                    text = f"Your insurence policy number {policy_number} expires in 10 days"
-                    send_complex_message(email, text)
-                    time.sleep(5)
-            db.session.commit()
-        except Exception as e:
-            logging.error(f"Failed to run task: {e}")
+
+        result = db.session.execute(
+            text(
+                "SELECT email,policy_number FROM get_data GROUP BY policy_number,email"
+            )
+        ).all()
+        if result:
+            for row in result:
+                email = [row[0]]
+                policy_number = row[1]
+                message = (
+                    f"Your insurence policy number {policy_number} expires in 10 days"
+                )
+                try:
+                    if policy_number:
+                        print(message)
+                        # send_complex_message(email, message)
+                        time.sleep(5)
+                except Exception as e:
+                    logging.error(f"Failed to run task: {e}")
+        db.session.commit()

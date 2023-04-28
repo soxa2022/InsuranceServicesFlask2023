@@ -44,7 +44,7 @@ def create_app(config="config.DevelopmentConfig"):
     app.config.from_object(config)
     api = Api(app)
     migrate = Migrate(app, db)
-    # schedule(app)
-    # CORS(app)
+    schedule(app)
+    CORS(app)
     [api.add_resource(*route) for route in routes]
     return app
