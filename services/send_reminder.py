@@ -25,7 +25,7 @@ def schedule(app):
     scheduler.api_enabled = True
     scheduler.init_app(app)
     scheduler.start()
-    scheduler.add_job(id="my_task", func=my_task, trigger="interval", seconds=5)
+    scheduler.add_job(id="my_task", func=my_task, trigger="interval", hours=24)
 
 
 def my_task():
@@ -46,8 +46,7 @@ def my_task():
                 )
                 try:
                     if policy_number:
-                        print(message)
-                        # send_complex_message(email, message)
+                        send_complex_message(email, message)
                         time.sleep(5)
                 except Exception as e:
                     logging.error(f"Failed to run task: {e}")
