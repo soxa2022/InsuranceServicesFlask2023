@@ -10,4 +10,3 @@ class SearchResponseSchema(Schema):
     talon_number = fields.Str(required=True)
     payment_id = fields.Str(required=True)
     amount = fields.Float(required=True)
-

@@ -15,12 +15,7 @@ class SearchResource(Resource):
     def get(self):
         plate_number = request.args.get("plate_number")
         email = request.args.get("email")
-        results = db.session.execute(
-            text(
-                "SELECT * FROM get_data GROUP BY email, name,"
-                "phone, plate_number, policy_number, talon_number, payment_id, amount"
-            )
-        ).all()
+        results = db.session.execute(text("SELECT * FROM get_data")).all()
         results = set(results)
         if email:
             results = [res for res in results if email in res]
