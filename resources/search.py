@@ -1,6 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from sqlalchemy.sql import text
+
 from db import db
 from managers.authorization import auth
 from models import RoleType
@@ -14,19 +15,16 @@ class SearchResource(Resource):
     def get(self):
         plate_number = request.args.get("plate_number")
         email = request.args.get("email")
-        result = db.session.execute(text("SELECT * FROM get_func()"))
-        # result = db.session.execute("SELECT * FROM get_func() WHERE email = :email", {"email": email})
+        results = db.session.execute(
+            text(
+                "SELECT * FROM get_data GROUP BY email, name,"
+                "phone, plate_number, policy_number, talon_number, payment_id, amount"
+            )
+        ).all()
+        results = set(results)
         if email:
-            result = (
-                result.filter_by(result.email.ilike("%" + email + "%"))
-                .order_by(result.email.asc())
-                .fetchall()
-            )
+            results = [res for res in results if email in res]
         if plate_number:
-            result = (
-                result.filter_by(plate_number=plate_number)
-                .order_by("plate_number")
-                .fetchall()
-            )
+            results = [res for res in results if plate_number in res]
 
-        return SearchResponseSchema(many=True).dump(result), 200
+        return SearchResponseSchema(many=True).dump(set(results)), 200
