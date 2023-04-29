@@ -19,6 +19,6 @@ routes = (
     (InsurenceCancelResource, "/insurence/vehicle/<int:pk>/cancel"),
     (InsurenceDeleteResource, "/insurence/vehicle/<int:pk>/delete"),
     (PaymentCardResource, "/insurence/payments/card"),
-    (SearchResource, "/insurence/search"),  # ?email=John&plate_number=Miami
+    (SearchResource, "/insurence/search"),
     (InsurenceStatsResource, "/insurence/stats"),
 )

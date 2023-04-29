@@ -1,6 +1,5 @@
 from marshmallow import fields, Schema, validate
 
-from models import VehicleType, SteeringWheelPosition
 from models.enum import EstateType
 from utils.validators import validate_password, check_email
 

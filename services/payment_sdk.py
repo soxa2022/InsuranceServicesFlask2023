@@ -1,5 +1,3 @@
-import uuid
-
 from decouple import config
 from square.client import Client
 

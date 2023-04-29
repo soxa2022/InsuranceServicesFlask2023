@@ -1,6 +1,5 @@
 from marshmallow import fields, validate
 
-from models import CustomerType
 from schemas.base import CustomerRequestBaseSchema
 from utils.validators import is_valid
 
