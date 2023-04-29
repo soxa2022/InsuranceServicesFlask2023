@@ -4,7 +4,7 @@ from flask_restful import Resource
 from managers.authorization import auth
 from managers.estate_insurence import EstateInsurenceManager
 from managers.insurenece_base import InsurenceManager
-from managers.venicle_insurence import VehicleInsurenceManager
+from managers.vehicle_insurence import VehicleInsurenceManager
 from models import RoleType, Vehicle, Estate
 from schemas.request_schema.estate import EstateRequestSchema
 from schemas.request_schema.vehicle import VehicleRequestSchema
