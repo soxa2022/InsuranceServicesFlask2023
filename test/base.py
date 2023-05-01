@@ -1,12 +1,12 @@
 from flask_testing import TestCase
-from managers.authorization import AuthManager
 
 from config import create_app
 from db import db
+from managers.authorization import AuthManager
 
 
-def generate_token(user):
-    return AuthManager.encode_token(user)
+def generate_token(customer):
+    return AuthManager.encode_token(customer)
 
 
 def mock_uuid():

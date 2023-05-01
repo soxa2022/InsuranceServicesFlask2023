@@ -51,18 +51,23 @@ class InsurenceAcceptResource(Resource):
     @auth.login_required
     @permission_required(RoleType.employee)
     def get(self, pk):
-        InsurenceManager.accept_insurence(pk)
+        return InsurenceManager.accept_insurence(pk)
 
 
 class InsurenceCancelResource(Resource):
     @auth.login_required
     @permission_required(RoleType.employee)
     def get(self, pk):
-        InsurenceManager.cancel_insurence(pk)
+        return InsurenceManager.cancel_insurence(pk)
 
 
-class InsurenceDeleteResource(Resource):
+class InsurenceResource(Resource):
     @auth.login_required
     @permission_required(RoleType.admin)
     def delete(self, pk):
-        InsurenceManager.delete_insurence(pk)
+        return InsurenceManager.delete_insurence(pk)
+
+    @auth.login_required
+    @permission_required(RoleType.admin)
+    def delete(self, pk):
+        return InsurenceManager.update_insurence(pk)

@@ -1,6 +1,10 @@
+import http
 import os
 
+import werkzeug
 from decouple import config
+from flask import make_response
+from werkzeug.wrappers import Response
 from werkzeug.exceptions import BadRequest
 
 from constants import TEMP_FILE_FOLDER
@@ -60,6 +64,7 @@ class InsurenceManager:
         ses.send_mail(file_name, customer.email)
         Vehicle.query.filter_by(id=insurence_id).update({"status": State.accepted})
         db.session.commit()
+        return Response(status=204)
 
     @staticmethod
     def cancel_insurence(insurence_id):
@@ -69,6 +74,7 @@ class InsurenceManager:
         send_complex_message(customer.email, TEXT)
         Vehicle.query.filter_by(id=insurence_id).update({"status": State.canceled})
         db.session.commit()
+        return Response(status=204)
 
     @staticmethod
     def validate_status(insurence_id):
@@ -82,6 +88,12 @@ class InsurenceManager:
     def delete_insurence(pk):
         InsurenceManager.validate_status(pk)
         Vehicle.query.filter_by(id=pk).update({"is_deleted": True})
+        return Response(status=204)
+
+    @staticmethod
+    def update_insurence(pk):
+        InsurenceManager.validate_status(pk)
+        # TODO: Add functionality
 
 
 role_mapper = {

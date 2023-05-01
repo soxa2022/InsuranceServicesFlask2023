@@ -5,7 +5,7 @@ from square.client import Client
 class SquareUpService:
     def __init__(self):
         self.client = Client(
-            access_token=config("SQUARE_TOKEN_CARD"), environment="sandbox"
+            access_token=config("SQUARE_TOKEN_CARD"), environment=config("SQUARE_ENV")
         )
         self.payment_id_ = None
 

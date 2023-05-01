@@ -1,7 +1,16 @@
 import factory
 
 from db import db
-from models import Customer, RoleType, State, Vehicle, VehicleType, Estate, EstateType, Transactions
+from models import (
+    Customer,
+    RoleType,
+    State,
+    Vehicle,
+    VehicleType,
+    Estate,
+    EstateType,
+    Transactions,
+)
 from test.base import mock_uuid
 
 
@@ -19,8 +28,8 @@ class CustomerFactory(BaseFactory):
         model = Customer
 
     id = factory.Sequence(lambda n: n)
-    name = f"{factory.Faker('first_name')} {factory.Faker('last_name')}"
-    egn_or_bulstat = "8505206110"
+    name = factory.Faker("name")
+    egn_or_bulstat = str(factory.Faker("random_number", digits=10))
     email = factory.Faker("email")
     phone = str(factory.Faker("random_number", digits=8))
     password = factory.Faker("password")
@@ -48,7 +57,6 @@ class VehicleFactory(BaseFactory):
     registration_address = factory.Faker("address")
     talon_photo = factory.Faker("url")
     usage = factory.Faker("word")
-    created_at = factory.Faker("date_time")
     status = State.pending
     customer_id = factory.LazyFunction(get_customer_id)
     is_deleted = False
@@ -62,7 +70,6 @@ class EstateFactory(BaseFactory):
     town = factory.Faker("city")
     address = factory.Faker("address")
     description = factory.Faker("sentence")
-    created_at = factory.Faker("date_time")
     status = State.pending
     customer_id = factory.LazyFunction(get_customer_id)
     garage = False
@@ -79,5 +86,5 @@ class TransactionFactory(BaseFactory):
     status = "COMPLETED"
     amount = factory.Faker("pyfloat")
     create_at = factory.Faker("date_time")
-    complaint_id = factory.LazyFunction(get_customer_id())
+    customer_id = factory.LazyFunction(get_customer_id)
     is_deleted = False

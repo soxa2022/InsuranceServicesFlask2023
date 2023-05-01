@@ -4,7 +4,7 @@ from resources.insurences import (
     EstateInsurenceResource,
     InsurenceAcceptResource,
     InsurenceCancelResource,
-    InsurenceDeleteResource,
+    InsurenceResource,
 )
 from resources.payment import PaymentCardResource
 from resources.search import SearchResource
@@ -17,7 +17,7 @@ routes = (
     (EstateInsurenceResource, "/insurence/estate"),
     (InsurenceAcceptResource, "/insurence/vehicle/<int:pk>/accept"),
     (InsurenceCancelResource, "/insurence/vehicle/<int:pk>/cancel"),
-    (InsurenceDeleteResource, "/insurence/vehicle/<int:pk>/delete"),
+    (InsurenceResource, "/insurence/vehicle/<int:pk>"),
     (PaymentCardResource, "/insurence/payments/card"),
     (SearchResource, "/insurence/search"),
     (InsurenceStatsResource, "/insurence/stats"),

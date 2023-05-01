@@ -3,10 +3,10 @@ import os
 import time
 
 from flask_apscheduler import APScheduler
-from sqlalchemy.sql import text
 
 from constants import TEMP_FILE_FOLDER
 from db import db
+from models import Customer, Transactions
 from services.send_email import send_complex_message
 
 scheduler = APScheduler()
@@ -25,17 +25,20 @@ def schedule(app):
     scheduler.api_enabled = True
     scheduler.init_app(app)
     scheduler.start()
-    scheduler.add_job(id="my_task", func=my_task, trigger="interval", hours=24)
+    scheduler.add_job(id="my_task", func=my_task, trigger="interval", seconds=10)
 
 
 def my_task():
     with scheduler.app.app_context():
         Config()
-
-        result = db.session.execute(
-            text(
-                "SELECT email,policy_number FROM get_data GROUP BY policy_number,email"
+        result = (
+            db.session.query(Customer.email, Transactions.policy_number)
+            .select_from(Customer)
+            .join(Transactions, Customer.id == Transactions.customer_id)
+            .filter(
+                db.func.DATE_PART("day", db.func.now() - Transactions.created_at) >= 355
             )
+            .filter(Transactions.status == "COMPLETED")
         ).all()
         if result:
             for row in result:
