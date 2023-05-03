@@ -1,19 +1,8 @@
-import os
-from unittest.mock import patch
-
-from managers.vehicle_insurence import VehicleInsurenceManager
-
-from constants import TEMP_FILE_FOLDER
-from models import RoleType, Vehicle, State
-from services.s3 import S3Service
-from test.base import TestAPIBase, generate_token, mock_uuid
+from models import RoleType
+from test.base import TestAPIBase, generate_token
 from test.factories import (
     CustomerFactory,
-    VehicleFactory,
-    TransactionFactory,
-    EstateFactory,
 )
-from utils.helpers import encoded_photo
 
 
 class TestAuthorizationAndPermissionRequirements(TestAPIBase):
@@ -29,7 +18,7 @@ class TestAuthorizationAndPermissionRequirements(TestAPIBase):
             ("POST", "/insurence/estate"),
             ("GET", "/insurence/vehicle/1/accept"),
             ("GET", "/insurence/vehicle/1/cancel"),
-            # ("DELETE", "/insurence/vehicle/<int:pk>/delete"),
+            # ("DELETE", "/insurence/vehicle/<int:pk>"),
             # ("POST", "/insurence/payments/card"),
             # ("GET", "/insurence/search"),
             # ("GET", "/insurence/stats"),
@@ -39,8 +28,10 @@ class TestAuthorizationAndPermissionRequirements(TestAPIBase):
             assert result.status_code == 401
             assert result.json == {"message": "Invalid or missing token"}
 
-    def test_permission__required_create_complaint_requires_complainer(self):
-        # Testing accept user
+        # Testing create vehicle permission customer
+
+    def test_permission__required_create_insurence_vehicle_requires_customer(self):
+        # Testing employee role
         customer = CustomerFactory(role=RoleType.employee)
         token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
@@ -48,7 +39,7 @@ class TestAuthorizationAndPermissionRequirements(TestAPIBase):
         assert response.status_code == 403
         assert response.json == {"message": "You not have permission to access this"}
 
-        # Testing admin user too
+        # Testing admin role too
         customer = CustomerFactory(role=RoleType.admin)
         token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
@@ -56,40 +47,90 @@ class TestAuthorizationAndPermissionRequirements(TestAPIBase):
         assert response.status_code == 403
         assert response.json == {"message": "You not have permission to access this"}
 
-        # Testing complainer user too
-        user = CustomerFactory(role=RoleType.employee)
-        token = generate_token(user)
+        # Testing customer role too
+        customer = CustomerFactory(role=RoleType.customer)
+        token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
         response = self.client.post("/insurence/vehicle", headers=headers)
         assert response.status_code == 400
 
-    def test_permission_required_approve_reject_complaint(self):
+        # Testing create estate permission customer
+
+    def test_permission__required_create_estate_vehicle_requires_customer(self):
+        # Testing employee role
+        customer = CustomerFactory(role=RoleType.employee)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.post("/insurence/estate", headers=headers)
+        assert response.status_code == 403
+        assert response.json == {"message": "You not have permission to access this"}
+
+        # Testing admin role too
+        customer = CustomerFactory(role=RoleType.admin)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.post("/insurence/estate", headers=headers)
+        assert response.status_code == 403
+        assert response.json == {"message": "You not have permission to access this"}
+
+        # Testing customer role too
+        customer = CustomerFactory(role=RoleType.customer)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.post("/insurence/estate", headers=headers)
+        assert response.status_code == 400
+
+    def test_permission_required_accept_insurence(self):
         # Testing admin user
-        user = CustomerFactory(role=RoleType.admin)
-        token = generate_token(user)
+        customer = CustomerFactory(role=RoleType.admin)
+        token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
         response = self.client.get("/insurence/vehicle/1/accept", headers=headers)
         assert response.status_code == 403
         assert response.json == {"message": "You not have permission to access this"}
 
-        # Testing complainer user
-        user = CustomerFactory(role=RoleType.employee)
-        token = generate_token(user)
+        # Testing customer user
+        customer = CustomerFactory(role=RoleType.customer)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.get("/insurence/vehicle/1/accept", headers=headers)
+        assert response.status_code == 403
+        assert response.json == {"message": "You not have permission to access this"}
+
+        # Testing employee user
+        customer = CustomerFactory(role=RoleType.employee)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.get("/insurence/vehicle/1/accept", headers=headers)
+        assert response.status_code == 400
+
+    def test_permission_required_cancel_insurence(self):
+        # Testing admin user
+        customer = CustomerFactory(role=RoleType.admin)
+        token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
         response = self.client.get("/insurence/vehicle/1/cancel", headers=headers)
         assert response.status_code == 403
         assert response.json == {"message": "You not have permission to access this"}
 
-        # Testing approver user
-        user = CustomerFactory(role=RoleType.employee)
-        token = generate_token(user)
+        # Testing customer user
+        customer = CustomerFactory(role=RoleType.customer)
+        token = generate_token(customer)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = self.client.get("/insurence/vehicle/1/cancel", headers=headers)
+        assert response.status_code == 403
+        assert response.json == {"message": "You not have permission to access this"}
+
+        # Testing employee user
+        customer = CustomerFactory(role=RoleType.employee)
+        token = generate_token(customer)
         headers = {"Authorization": f"Bearer {token}"}
         response = self.client.get("/insurence/vehicle/1/cancel", headers=headers)
         assert response.status_code == 400
 
 
 # # Testing create complaint about
-# class TestComplaints(TestAPIBase):
+# class TestInsurence(TestAPIBase):
 #     @patch("uuid.uuid4", mock_uuid)
 #     @patch.object(ComplaintManager, "issue_transaction", return_value=None)
 #     @patch.object(S3Service, "upload_file", return_value="test_url.bg")

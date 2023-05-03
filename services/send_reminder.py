@@ -25,7 +25,7 @@ def schedule(app):
     scheduler.api_enabled = True
     scheduler.init_app(app)
     scheduler.start()
-    scheduler.add_job(id="my_task", func=my_task, trigger="interval", seconds=10)
+    scheduler.add_job(id="my_task", func=my_task, trigger="interval", hours=24)
 
 
 def my_task():

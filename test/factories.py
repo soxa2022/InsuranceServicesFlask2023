@@ -11,6 +11,7 @@ from models import (
     EstateType,
     Transactions,
 )
+from scripts.radom_number import random_egn
 from test.base import mock_uuid
 
 
@@ -29,9 +30,9 @@ class CustomerFactory(BaseFactory):
 
     id = factory.Sequence(lambda n: n)
     name = factory.Faker("name")
-    egn_or_bulstat = str(factory.Faker("random_number", digits=10))
+    egn_or_bulstat = factory.LazyFunction(random_egn)
     email = factory.Faker("email")
-    phone = str(factory.Faker("random_number", digits=8))
+    phone = "0888999888"
     password = factory.Faker("password")
     role = RoleType.customer
     address = factory.Faker("address")
@@ -83,8 +84,6 @@ class TransactionFactory(BaseFactory):
     id = factory.Sequence(lambda n: n)
     payment_id = mock_uuid()
     policy_number = str(factory.Faker("random_number", digits=18))
-    status = "COMPLETED"
     amount = factory.Faker("pyfloat")
-    create_at = factory.Faker("date_time")
     customer_id = factory.LazyFunction(get_customer_id)
     is_deleted = False
