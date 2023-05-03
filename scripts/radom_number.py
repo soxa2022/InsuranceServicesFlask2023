@@ -8,5 +8,6 @@ def random_numbers():
 def random_egn():
     return random.randint(10**9, 10**10 - 1)
 
+
 # if __name__ == '__main__':
 #     print(random_number())
